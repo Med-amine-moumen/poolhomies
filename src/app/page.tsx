@@ -1,65 +1,61 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen flex flex-col">
+      <header className="sticky top-0 z-30">
+        <div className="px-5 sm:px-8 h-16 flex items-center justify-between max-w-6xl w-full mx-auto">
+          <span className="font-display text-xl font-bold tracking-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
+            <span className="text-accent">pool</span>homies
+          </span>
+          <nav className="flex items-center gap-2">
+            <Link href="/login">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="bg-black/30 backdrop-blur-md text-fg hover:bg-black/55 hover:text-fg border border-white/10"
+              >
+                Log in
+              </Button>
+            </Link>
+            <Link href="/signup">
+              <Button size="sm" className="shadow-lg shadow-black/40">
+                Sign up
+              </Button>
+            </Link>
+          </nav>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </header>
+
+      <main className="flex-1 flex flex-col items-center justify-center px-5 py-16 sm:py-24 text-center max-w-4xl mx-auto">
+        <div className="inline-flex items-center gap-2 rounded-full border border-border-strong bg-card/85 backdrop-blur-md px-3 py-1 text-xs text-fg-muted mb-6">
+          <span className="size-1.5 rounded-full bg-accent animate-pulse" />
+          For pool homies who keep score
+        </div>
+        <h1 className="font-display text-5xl sm:text-7xl font-bold tracking-tight leading-[0.95] drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+          Settle every game.
+          <br />
+          <span className="text-accent">Track every win.</span>
+        </h1>
+        <p className="mt-6 text-lg text-fg max-w-xl drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
+          Log matches, ride streaks, and crown the group champion. A private
+          wins tracker for you and the homies.
+        </p>
+        <div className="mt-10 flex flex-col sm:flex-row gap-3">
+          <Link href="/signup">
+            <Button size="lg" className="w-full sm:w-auto">
+              Start tracking
+            </Button>
+          </Link>
+          <Link href="/login">
+            <Button size="lg" variant="outline" className="w-full sm:w-auto">
+              I have an account
+            </Button>
+          </Link>
         </div>
       </main>
+
     </div>
   );
 }

@@ -30,8 +30,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files (real values stay local; .env.example is committed as a template)
 .env*
+!.env.example
+
+# Supabase admin seed contains a real password — keep local only
+supabase/seed_admin.sql
 
 # vercel
 .vercel
