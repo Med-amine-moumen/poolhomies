@@ -49,7 +49,7 @@ export default async function GroupHomePage({
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
       <Leaderboard groupId={id} rows={rows} currentUserId={user.id} />
-      <RecentMatches matches={matches} />
+      <RecentMatches groupId={id} matches={matches} />
     </div>
   );
 }

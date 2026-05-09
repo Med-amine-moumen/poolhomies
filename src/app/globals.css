@@ -107,3 +107,17 @@ select option:disabled {
 .animate-pulse-glow {
   animation: pulse-glow 2.4s ease-in-out infinite;
 }
+
+/* Hide scrollbar for tab overflow-x scroll */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Tabular numbers for leaderboard stats */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}

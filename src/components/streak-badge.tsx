@@ -7,12 +7,29 @@ interface Props {
 }
 
 export function StreakBadge({ current, best }: Props) {
+  if (current >= 5) {
+    return (
+      <div
+        className={cn(
+          "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-bold",
+          "border border-amber-400/60 bg-amber-500/20 text-amber-300",
+          "shadow-[0_0_8px_rgba(245,158,11,0.4)] animate-pulse-glow",
+        )}
+        title={`${current}-win streak on fire! (best: ${best})`}
+      >
+        <Flame className="size-3.5 animate-flicker" />
+        <Flame className="size-3.5 animate-flicker -ml-1.5" />
+        <span>{current}</span>
+      </div>
+    );
+  }
   if (current >= 3) {
     return (
       <div
         className={cn(
           "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold",
-          "border border-[color:var(--color-fire)]/40 bg-[color:var(--color-fire)]/15 text-[color:var(--color-fire)]",
+          "border border-orange-400/40 bg-orange-500/15 text-orange-300",
+          "animate-pulse",
         )}
         title={`${current}-win streak (best: ${best})`}
       >
@@ -33,7 +50,7 @@ export function StreakBadge({ current, best }: Props) {
     );
   }
   return (
-    <span className="text-xs text-fg-subtle font-mono">
+    <span className="text-xs text-fg-subtle font-mono" title={best > 0 ? `Best streak: ${best}` : undefined}>
       {best > 0 ? `best ${best}` : "—"}
     </span>
   );

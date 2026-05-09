@@ -44,3 +44,21 @@ export function initials(name: string | null | undefined): string {
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
+
+const GRADIENT_PAIRS: [string, string][] = [
+  ["#f59e0b", "#d97706"], // amber / gold
+  ["#10b981", "#0d9488"], // emerald / teal
+  ["#3b82f6", "#6366f1"], // blue / indigo
+  ["#f43f5e", "#ec4899"], // rose / pink
+  ["#a855f7", "#8b5cf6"], // purple / violet
+  ["#f97316", "#f59e0b"], // orange / amber
+];
+
+export function avatarGradient(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = (hash * 31 + name.charCodeAt(i)) | 0;
+  }
+  const [a, b] = GRADIENT_PAIRS[Math.abs(hash) % GRADIENT_PAIRS.length];
+  return `linear-gradient(135deg, ${a}, ${b})`;
+}

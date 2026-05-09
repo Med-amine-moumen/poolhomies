@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy } from "lucide-react";
+import { Trophy, Crown } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { StreakBadge } from "@/components/streak-badge";
 import { createClient } from "@/lib/supabase/client";
@@ -15,10 +15,86 @@ interface Props {
   currentUserId: string;
 }
 
-export function Leaderboard({ groupId, rows: initialRows, currentUserId }: Props) {
-  const [rows, setRows] = useState(initialRows);
+function sortRows(rows: LeaderboardRow[]): LeaderboardRow[] {
+  return [...rows].sort(
+    (a, b) =>
+      Number(b.wins) - Number(a.wins) ||
+      Number(a.losses) - Number(b.losses) ||
+      a.display_name.localeCompare(b.display_name),
+  );
+}
 
-  // Subscribe to new matches and refetch the leaderboard via RPC.
+interface PodiumCardProps {
+  row: LeaderboardRow;
+  rank: 1 | 2 | 3;
+  isCurrentUser: boolean;
+}
+
+function PodiumCard({ row, rank, isCurrentUser }: PodiumCardProps) {
+  const styles = {
+    1: {
+      border: "border-accent/60",
+      bg: "bg-accent/10",
+      text: "text-accent",
+      label: "Champion",
+      delay: 0,
+    },
+    2: {
+      border: "border-[#C0C0C0]/40",
+      bg: "bg-white/5",
+      text: "text-fg-muted",
+      label: "2nd",
+      delay: 0.1,
+    },
+    3: {
+      border: "border-[#CD7F32]/40",
+      bg: "bg-orange-900/10",
+      text: "text-orange-400/80",
+      label: "3rd",
+      delay: 0.1,
+    },
+  }[rank];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ delay: styles.delay, duration: 0.35, ease: "easeOut" }}
+      className={cn(
+        "flex flex-col items-center gap-2 rounded-2xl border p-3 sm:p-4 text-center",
+        "w-24 sm:w-28",
+        rank === 1 ? "pt-5 pb-4" : "pt-3 pb-3",
+        styles.border,
+        styles.bg,
+        isCurrentUser && "ring-1 ring-accent/30",
+      )}
+    >
+      {rank === 1 ? (
+        <Crown className="size-4 text-accent mb-0.5" />
+      ) : (
+        <span className={cn("text-xs font-bold", styles.text)}>#{rank}</span>
+      )}
+      <Avatar
+        src={row.avatar_url}
+        name={row.display_name}
+        size={rank === 1 ? "md" : "sm"}
+        champion={rank === 1}
+      />
+      <div className="text-xs font-semibold truncate w-full max-w-[80px]">
+        {row.display_name}
+        {isCurrentUser && <span className="text-fg-subtle ml-1">(you)</span>}
+      </div>
+      <div className={cn("font-display text-lg font-bold", styles.text)}>
+        {row.wins}W
+      </div>
+      <StreakBadge current={row.current_streak} best={row.best_streak} />
+    </motion.div>
+  );
+}
+
+export function Leaderboard({ groupId, rows: initialRows, currentUserId }: Props) {
+  const [rows, setRows] = useState(sortRows(initialRows));
+
   useEffect(() => {
     const supabase = createClient();
     const channel = supabase
@@ -36,10 +112,7 @@ export function Leaderboard({ groupId, rows: initialRows, currentUserId }: Props
             group_uuid: groupId,
           });
           if (data) {
-            const sorted = (data as LeaderboardRow[]).sort(
-              (a, b) => Number(b.wins) - Number(a.wins) || Number(a.losses) - Number(b.losses) || a.display_name.localeCompare(b.display_name),
-            );
-            setRows(sorted);
+            setRows(sortRows(data as LeaderboardRow[]));
           }
         },
       )
@@ -53,9 +126,7 @@ export function Leaderboard({ groupId, rows: initialRows, currentUserId }: Props
     return (
       <div className="rounded-2xl border border-dashed border-border-strong bg-card/40 p-10 text-center">
         <Trophy className="size-8 mx-auto text-fg-subtle" />
-        <h3 className="mt-3 font-display text-xl font-semibold">
-          No matches yet
-        </h3>
+        <h3 className="mt-3 font-display text-xl font-semibold">No matches yet</h3>
         <p className="text-fg-muted mt-1 max-w-md mx-auto">
           Once anyone logs a win, the leaderboard fills up here.
         </p>
@@ -64,7 +135,9 @@ export function Leaderboard({ groupId, rows: initialRows, currentUserId }: Props
   }
 
   return (
-    <div className="rounded-2xl border border-border bg-card/60 backdrop-blur-sm overflow-hidden">
+    <div className="rounded-2xl border border-border overflow-hidden"
+      style={{ background: "rgba(6,22,13,0.7)", backdropFilter: "blur(16px)" }}>
+      {/* Header */}
       <div className="px-5 sm:px-6 py-4 border-b border-border flex items-center justify-between">
         <h2 className="font-display text-lg font-semibold flex items-center gap-2">
           <Trophy className="size-5 text-accent" />
@@ -75,7 +148,23 @@ export function Leaderboard({ groupId, rows: initialRows, currentUserId }: Props
         </span>
       </div>
 
-      <div className="hidden sm:grid grid-cols-[40px_1fr_60px_60px_80px_120px] gap-2 px-6 py-3 text-xs uppercase tracking-wider text-fg-subtle border-b border-border">
+      {/* Podium — show top 3 if there are at least 2 players */}
+      {rows.length >= 2 && (
+        <div className="px-4 py-5 border-b border-border">
+          <div className="flex items-end justify-center gap-2 sm:gap-3">
+            {rows[1] && (
+              <PodiumCard row={rows[1]} rank={2} isCurrentUser={rows[1].player_id === currentUserId} />
+            )}
+            <PodiumCard row={rows[0]} rank={1} isCurrentUser={rows[0].player_id === currentUserId} />
+            {rows[2] && (
+              <PodiumCard row={rows[2]} rank={3} isCurrentUser={rows[2].player_id === currentUserId} />
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Table header */}
+      <div className="hidden sm:grid grid-cols-[36px_1fr_52px_52px_140px_120px] gap-2 px-5 sm:px-6 py-2.5 text-[10px] uppercase tracking-widest text-fg-subtle border-b border-border">
         <div>#</div>
         <div>Player</div>
         <div className="text-right">W</div>
@@ -84,59 +173,79 @@ export function Leaderboard({ groupId, rows: initialRows, currentUserId }: Props
         <div className="text-right">Streak</div>
       </div>
 
+      {/* Rows */}
       <ol className="divide-y divide-border">
         <AnimatePresence initial={false}>
           {rows.map((row, idx) => (
             <motion.li
               key={row.player_id}
               layout
-              initial={{ opacity: 0, y: 8 }}
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.03, duration: 0.25 }}
+              transition={{ delay: idx * 0.04, duration: 0.22 }}
               className={cn(
-                "grid grid-cols-[40px_1fr_60px_60px_80px_120px] gap-2 px-6 py-3 items-center",
-                row.player_id === currentUserId && "bg-accent-soft/30",
+                "grid grid-cols-[36px_1fr_52px_52px_140px_120px] gap-2 px-5 sm:px-6 py-3 items-center",
+                "group transition-colors duration-150",
+                "hover:bg-white/[0.04]",
+                idx === 0
+                  ? "border-l-2 border-l-accent bg-accent/5"
+                  : "border-l-2 border-l-transparent",
+                row.player_id === currentUserId && "bg-accent/[0.07]",
               )}
             >
-              <div className="font-display font-bold text-fg-muted">
-                {idx === 0 ? (
-                  <span className="text-accent">1</span>
-                ) : (
-                  idx + 1
-                )}
+              {/* Rank */}
+              <div className={cn("font-display font-bold text-sm", idx === 0 ? "text-accent" : "text-fg-subtle")}>
+                {idx + 1}
               </div>
-              <div className="min-w-0 flex items-center gap-3">
+
+              {/* Player */}
+              <div className="min-w-0 flex items-center gap-2.5">
                 <Avatar
                   src={row.avatar_url}
                   name={row.display_name}
                   size="sm"
+                  champion={idx === 0}
                 />
                 <div className="min-w-0">
-                  <div className="font-medium truncate">
+                  <div className="text-sm font-medium truncate">
                     {row.display_name}
                     {row.player_id === currentUserId && (
-                      <span className="ml-2 text-xs text-fg-subtle">(you)</span>
+                      <span className="ml-1.5 text-xs text-fg-subtle">(you)</span>
                     )}
                   </div>
-                  <div className="sm:hidden text-xs text-fg-muted mt-0.5">
+                  {/* Mobile stats */}
+                  <div className="sm:hidden text-xs text-fg-muted mt-0.5 font-mono tabular-nums">
                     {row.wins}W · {row.losses}L · {row.win_pct}%
                   </div>
                 </div>
               </div>
-              <div className="hidden sm:block text-right font-mono tabular-nums">
+
+              {/* W */}
+              <div className="hidden sm:block text-right font-mono tabular-nums text-sm font-semibold">
                 {row.wins}
               </div>
-              <div className="hidden sm:block text-right font-mono tabular-nums text-fg-muted">
+
+              {/* L */}
+              <div className="hidden sm:block text-right font-mono tabular-nums text-sm text-fg-muted">
                 {row.losses}
               </div>
-              <div className="hidden sm:block text-right font-mono tabular-nums">
-                {row.win_pct}%
+
+              {/* Win % bar */}
+              <div className="hidden sm:flex items-center gap-2 justify-end">
+                <div className="w-16 h-1.5 rounded-full bg-white/10 overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-accent transition-all duration-500"
+                    style={{ width: `${row.win_pct}%` }}
+                  />
+                </div>
+                <span className="font-mono tabular-nums text-xs w-9 text-right">
+                  {row.win_pct}%
+                </span>
               </div>
+
+              {/* Streak */}
               <div className="flex justify-end">
-                <StreakBadge
-                  current={row.current_streak}
-                  best={row.best_streak}
-                />
+                <StreakBadge current={row.current_streak} best={row.best_streak} />
               </div>
             </motion.li>
           ))}
