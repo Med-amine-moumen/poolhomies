@@ -41,7 +41,8 @@ export default async function GroupHomePage({
       .limit(8),
   ]);
 
-  const rows = (leaderboardRes.data as LeaderboardRow[] | null) ?? [];
+  const rows = ((leaderboardRes.data as LeaderboardRow[] | null) ?? [])
+    .sort((a, b) => Number(b.wins) - Number(a.wins) || Number(a.losses) - Number(b.losses) || a.display_name.localeCompare(b.display_name));
   const matches =
     (matchesRes.data as unknown as MatchWithProfiles[] | null) ?? [];
 

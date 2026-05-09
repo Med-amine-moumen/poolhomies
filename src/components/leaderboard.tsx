@@ -35,7 +35,12 @@ export function Leaderboard({ groupId, rows: initialRows, currentUserId }: Props
           const { data } = await supabase.rpc("get_leaderboard", {
             group_uuid: groupId,
           });
-          if (data) setRows(data as LeaderboardRow[]);
+          if (data) {
+            const sorted = (data as LeaderboardRow[]).sort(
+              (a, b) => Number(b.wins) - Number(a.wins) || Number(a.losses) - Number(b.losses) || a.display_name.localeCompare(b.display_name),
+            );
+            setRows(sorted);
+          }
         },
       )
       .subscribe();
