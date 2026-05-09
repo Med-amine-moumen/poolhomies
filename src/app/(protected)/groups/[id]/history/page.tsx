@@ -49,9 +49,8 @@ export default async function HistoryPage({
     supabase
       .from("match_comments")
       .select(
-        "id, match_id, user_id, body, created_at, profile:profiles!match_comments_user_id_fkey(id,display_name,avatar_url), match:matches!match_comments_match_id_fkey(group_id)",
+        "id, match_id, user_id, body, created_at, profile:profiles!match_comments_user_id_fkey(id,display_name,avatar_url)",
       )
-      .eq("match.group_id", id)
       .order("created_at", { ascending: true }),
     supabase
       .from("profiles")
