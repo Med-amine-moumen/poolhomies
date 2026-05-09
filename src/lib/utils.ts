@@ -46,12 +46,12 @@ export function initials(name: string | null | undefined): string {
 }
 
 const GRADIENT_PAIRS: [string, string][] = [
-  ["#f59e0b", "#d97706"], // amber / gold
-  ["#10b981", "#0d9488"], // emerald / teal
-  ["#3b82f6", "#6366f1"], // blue / indigo
-  ["#f43f5e", "#ec4899"], // rose / pink
-  ["#a855f7", "#8b5cf6"], // purple / violet
-  ["#f97316", "#f59e0b"], // orange / amber
+  ["#f5cf5b", "#d97706"], // gold / amber  — matches accent
+  ["#10b981", "#14b8a6"], // emerald / teal
+  ["#06b6d4", "#3b82f6"], // cyan / blue
+  ["#22c55e", "#16a34a"], // green / dark-green
+  ["#f97316", "#ea580c"], // orange / deep-orange
+  ["#84cc16", "#4ade80"], // lime / light-green
 ];
 
 export function avatarGradient(name: string): string {

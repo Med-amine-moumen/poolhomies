@@ -44,7 +44,7 @@ export default async function GroupLayout({
   const matchCount = matchCountRes.count ?? 0;
 
   return (
-    <main className="max-w-6xl mx-auto px-5 sm:px-8 py-8">
+    <main className="max-w-6xl mx-auto px-5 sm:px-8 pt-6 pb-10">
       {/* Group header */}
       <div className="mb-6 space-y-4">
         {/* Back + Settings */}
