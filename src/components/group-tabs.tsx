@@ -52,7 +52,7 @@ export function GroupTabs({ groupId }: { groupId: string }) {
                 />
               )}
               <t.Icon className="relative size-3.5 shrink-0" />
-              <span className="relative">{t.label}</span>
+              <span className="relative hidden sm:inline">{t.label}</span>
             </Link>
           );
         })}

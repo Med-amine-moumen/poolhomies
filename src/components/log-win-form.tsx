@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,7 +25,12 @@ function defaultLocalDateTime(): string {
 
 export function LogWinForm({ groupId, members, currentUserId }: Props) {
   const [state, formAction, pending] = useActionState(logWinAction, undefined);
+  const [tzOffset, setTzOffset] = useState(0);
   const [winnerId, setWinnerId] = useState(currentUserId);
+
+  useEffect(() => {
+    setTzOffset(new Date().getTimezoneOffset());
+  }, []);
   const [loserId, setLoserId] = useState(
     members.find((m) => m.id !== currentUserId)?.id ?? "",
   );
@@ -34,6 +39,7 @@ export function LogWinForm({ groupId, members, currentUserId }: Props) {
   return (
     <form action={formAction} className="space-y-5">
       <input type="hidden" name="group_id" value={groupId} />
+      <input type="hidden" name="tz_offset" value={tzOffset} />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">

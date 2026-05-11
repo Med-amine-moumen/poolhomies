@@ -16,6 +16,7 @@ const logSchema = z
       .default("8-Ball"),
     notes: z.string().max(500).optional(),
     played_at: z.string().optional(),
+    tz_offset: z.coerce.number().int().min(-840).max(720).default(0),
   })
   .refine((v) => v.winner_id !== v.loser_id, {
     message: "Winner and opponent must be different players",
@@ -36,6 +37,7 @@ export async function logWinAction(
     game_type: formData.get("game_type") || "8-Ball",
     notes: (formData.get("notes") as string) || undefined,
     played_at: (formData.get("played_at") as string) || undefined,
+    tz_offset: formData.get("tz_offset") || "0",
   });
   if (!parsed.success) return { error: parsed.error.issues[0].message };
 
@@ -45,8 +47,18 @@ export async function logWinAction(
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  // datetime-local inputs submit "YYYY-MM-DDTHH:MM" with no timezone.
+  // We reconstruct the correct UTC time using the browser's offset
+  // (getTimezoneOffset: positive = west of UTC, negative = east).
   const playedAt = parsed.data.played_at
-    ? new Date(parsed.data.played_at).toISOString()
+    ? (() => {
+        const off = parsed.data.tz_offset;
+        const sign = off <= 0 ? "+" : "-";
+        const abs = Math.abs(off);
+        const hh = String(Math.floor(abs / 60)).padStart(2, "0");
+        const mm = String(abs % 60).padStart(2, "0");
+        return new Date(`${parsed.data.played_at}:00${sign}${hh}:${mm}`).toISOString();
+      })()
     : new Date().toISOString();
 
   const { error } = await supabase.from("matches").insert({

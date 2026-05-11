@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, LogOut } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { logoutAction } from "@/actions/auth";
 
@@ -51,9 +51,10 @@ export function Nav({ profile }: NavProps) {
           <form action={logoutAction}>
             <button
               type="submit"
-              className="text-sm text-fg/70 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-fg rounded-full px-3 py-1 transition-colors"
+              className="inline-flex items-center gap-1.5 text-sm text-fg/70 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-fg rounded-full px-3 py-1.5 transition-colors"
             >
-              Log out
+              <LogOut className="size-3.5" />
+              <span className="hidden sm:inline">Log out</span>
             </button>
           </form>
         </div>

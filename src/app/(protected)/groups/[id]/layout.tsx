@@ -95,12 +95,13 @@ export default async function GroupLayout({
 
       <GroupTabs groupId={id} />
 
-      <div className="mt-6">{children}</div>
+      <div className="mt-6 pb-24 sm:pb-0">{children}</div>
 
       {/* Mobile FAB — Log a win */}
       <Link
         href={`/groups/${id}/log`}
-        className="fixed bottom-6 right-6 z-40 sm:hidden flex h-14 w-14 items-center justify-center rounded-full bg-accent shadow-lg shadow-accent/30 transition-transform active:scale-95"
+        className="fixed right-6 z-40 sm:hidden flex h-14 w-14 items-center justify-center rounded-full bg-accent shadow-lg shadow-accent/30 transition-transform active:scale-95"
+        style={{ bottom: "calc(1.5rem + env(safe-area-inset-bottom, 0px))" }}
         aria-label="Log a win"
       >
         <Plus className="size-7 text-black" />

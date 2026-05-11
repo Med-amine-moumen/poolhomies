@@ -91,13 +91,13 @@ export function H2HComparison({ groupId, members, currentUserId }: Props) {
       ) : loading ? (
         <Skeleton className="h-48 w-full rounded-2xl" />
       ) : (
-        <div className="rounded-2xl border border-border bg-card/60 backdrop-blur-sm p-6 sm:p-8">
-          <div className="flex items-center justify-between gap-4 mb-6">
-            <div className="flex items-center gap-3 min-w-0">
+        <div className="rounded-2xl border border-border bg-card/60 backdrop-blur-sm p-4 sm:p-8">
+          <div className="flex items-center justify-between gap-2 sm:gap-4 mb-6">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <Avatar
                 src={playerA.avatar_url}
                 name={playerA.display_name}
-                size="lg"
+                size="md"
               />
               <div className="min-w-0">
                 <div className="text-xs uppercase tracking-wider text-fg-subtle">
@@ -108,12 +108,12 @@ export function H2HComparison({ groupId, members, currentUserId }: Props) {
                 </div>
               </div>
             </div>
-            <div className="text-fg-subtle font-display text-2xl">vs</div>
-            <div className="flex items-center gap-3 min-w-0 flex-row-reverse text-right">
+            <div className="text-fg-subtle font-display text-xl sm:text-2xl shrink-0">vs</div>
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-row-reverse text-right">
               <Avatar
                 src={playerB.avatar_url}
                 name={playerB.display_name}
-                size="lg"
+                size="md"
               />
               <div className="min-w-0">
                 <div className="text-xs uppercase tracking-wider text-fg-subtle">
@@ -127,13 +127,13 @@ export function H2HComparison({ groupId, members, currentUserId }: Props) {
           </div>
 
           <div className="flex items-baseline justify-between gap-4 mb-3">
-            <span className="font-display text-5xl font-bold text-accent">
+            <span className="font-display text-4xl sm:text-5xl font-bold text-accent">
               {result?.a_wins ?? 0}
             </span>
-            <span className="text-fg-subtle text-sm">
+            <span className="text-fg-subtle text-sm text-center shrink-0">
               {total} {total === 1 ? "match" : "matches"}
             </span>
-            <span className="font-display text-5xl font-bold text-fg-muted">
+            <span className="font-display text-4xl sm:text-5xl font-bold text-fg-muted">
               {result?.b_wins ?? 0}
             </span>
           </div>

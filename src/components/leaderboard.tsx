@@ -184,7 +184,8 @@ export function Leaderboard({ groupId, rows: initialRows, currentUserId }: Props
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.04, duration: 0.22 }}
               className={cn(
-                "grid grid-cols-[36px_1fr_52px_52px_140px_120px] gap-2 px-5 sm:px-6 py-3 items-center",
+                "grid gap-2 px-4 sm:px-6 py-3 items-center",
+                "grid-cols-[36px_1fr_auto] sm:grid-cols-[36px_1fr_52px_52px_140px_120px]",
                 "group transition-colors duration-150",
                 "hover:bg-white/[0.04]",
                 idx === 0

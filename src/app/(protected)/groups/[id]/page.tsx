@@ -43,8 +43,12 @@ export default async function GroupHomePage({
 
   const rows = ((leaderboardRes.data as LeaderboardRow[] | null) ?? [])
     .sort((a, b) => Number(b.wins) - Number(a.wins) || Number(a.losses) - Number(b.losses) || a.display_name.localeCompare(b.display_name));
-  const matches =
-    (matchesRes.data as unknown as MatchWithProfiles[] | null) ?? [];
+
+  // Fetch returns newest-first (played_at DESC). Reverse so the sidebar
+  // shows a chronological timeline: oldest match at top, newest at bottom.
+  const matches = (
+    (matchesRes.data as unknown as MatchWithProfiles[] | null) ?? []
+  ).reverse();
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
