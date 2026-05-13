@@ -27,6 +27,7 @@ export default async function DashboardPage() {
   // Cross-group quick stats
   let totalWins = 0;
   let bestStreakAcrossGroups = 0;
+  let currentStreakAcrossGroups = 0;
   for (const g of groups) {
     const { data } = await supabase.rpc("get_leaderboard", {
       group_uuid: g.id,
@@ -37,6 +38,7 @@ export default async function DashboardPage() {
     if (me) {
       totalWins += me.wins;
       bestStreakAcrossGroups = Math.max(bestStreakAcrossGroups, me.best_streak);
+      currentStreakAcrossGroups = Math.max(currentStreakAcrossGroups, me.current_streak);
     }
   }
 
@@ -72,8 +74,9 @@ export default async function DashboardPage() {
         />
         <StatTile
           icon={<Flame className="size-5 text-[color:var(--color-fire)]" />}
-          label="Best streak"
-          value={bestStreakAcrossGroups}
+          label="Current streak"
+          value={currentStreakAcrossGroups}
+          subLabel={bestStreakAcrossGroups > 0 ? `best: ${bestStreakAcrossGroups}` : undefined}
         />
         <StatTile
           label="Groups"
@@ -99,10 +102,12 @@ function StatTile({
   icon,
   label,
   value,
+  subLabel,
 }: {
   icon: React.ReactNode;
   label: string;
   value: number;
+  subLabel?: string;
 }) {
   return (
     <div className="rounded-2xl border border-border bg-card/60 backdrop-blur-sm p-5">
@@ -113,6 +118,9 @@ function StatTile({
       <p className="mt-2 font-display text-3xl font-bold tracking-tight">
         {value}
       </p>
+      {subLabel && (
+        <p className="mt-1 text-xs text-fg-subtle">{subLabel}</p>
+      )}
     </div>
   );
 }

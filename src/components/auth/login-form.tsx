@@ -36,6 +36,9 @@ export function LoginForm({ next }: { next?: string }) {
           type="password"
           required
           autoComplete="current-password"
+          autoCorrect="off"
+          autoCapitalize="none"
+          spellCheck={false}
           placeholder="••••••••"
         />
       </div>
