@@ -19,7 +19,7 @@ export default function AuthLayout({
           </Link>
         </div>
       </header>
-      <main className="flex-1 flex items-center justify-center px-5 py-12">
+      <main className="flex-1 flex items-start sm:items-center justify-center px-5 py-8 sm:py-12">
         <div className="w-full max-w-md">
           <div className="rounded-2xl border border-border-strong bg-card/95 backdrop-blur-md shadow-2xl shadow-black/40 p-6 sm:p-8">
             {children}

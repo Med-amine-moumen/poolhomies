@@ -51,11 +51,15 @@ body {
 
 /* The cue stick (rendered in canvas) is the cursor everywhere — hide the OS
    pointer on every element. Text-input carets still show normally because
-   `cursor: none` only hides the pointer, not the editing caret. */
-*,
-*::before,
-*::after {
-  cursor: none !important;
+   `cursor: none` only hides the pointer, not the editing caret.
+   Only applies on pointer/mouse devices; touch devices keep their default cursor
+   so taps work correctly and inputs are focusable. */
+@media (hover: hover) and (pointer: fine) {
+  *,
+  *::before,
+  *::after {
+    cursor: none !important;
+  }
 }
 
 * {

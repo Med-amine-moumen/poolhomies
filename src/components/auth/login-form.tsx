@@ -21,6 +21,9 @@ export function LoginForm({ next }: { next?: string }) {
           type="email"
           required
           autoComplete="email"
+          autoCapitalize="none"
+          autoCorrect="off"
+          inputMode="email"
           placeholder="you@example.com"
         />
       </div>

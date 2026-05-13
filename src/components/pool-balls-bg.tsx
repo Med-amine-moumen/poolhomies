@@ -106,6 +106,9 @@ export function PoolBallsBackground() {
   const cueCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    // Skip heavy physics animation on touch/mobile — too expensive for mobile CPUs
+    if (window.matchMedia("(hover: none) and (pointer: coarse)").matches) return;
+
     const tableCanvas = tableCanvasRef.current;
     const cueCanvas = cueCanvasRef.current;
     if (!tableCanvas || !cueCanvas) return;
